@@ -22,14 +22,14 @@ public class ClientFactory : IClientFactory
                     switch (type)
                     {
                         case ClientType.Tags:
-                            apiClient = new TagsClient();
+                            // apiClient = new TagsClient();
                             break;
                         
                         default: 
                             throw new ArgumentException("Not implemented api client exception");
                     }
 
-                    _apiClients[type] = apiClient;
+                    // _apiClients[type] = apiClient;
                 }
             }
         }

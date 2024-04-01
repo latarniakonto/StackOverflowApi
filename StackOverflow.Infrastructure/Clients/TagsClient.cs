@@ -7,10 +7,10 @@ using StackOverflow.Infrastructure.Services;
 
 namespace StackOverflow.Infrastructure.Clients;
 
-public class TagsClient : IClient, IDisposable
+public class TagsClient : ITagsClient, IDisposable
 {
     private readonly HttpClient _httpClient;
-    private TagsResponse? _data;
+    private TagsResponse _data;
 
     public class TagsResponse
     {
@@ -36,9 +36,11 @@ public class TagsClient : IClient, IDisposable
         _data = new TagsResponse();
     }
 
-    public async Task GetDataAsync()
+    public async Task<List<Tag>> GetDataAsync()
     {
         await FetchDataFromApi();
+
+        return _data.Items;
     }
 
     private async Task FetchDataFromApi()
