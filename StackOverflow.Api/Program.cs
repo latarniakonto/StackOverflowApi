@@ -8,7 +8,7 @@ var database = client.GetDatabase("StackOverflow");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<IClientFactory, ClientFactory>();
+builder.Services.AddSingleton<ITagsClient, TagsClient>();
 builder.Services.AddSingleton<MongoDbContext>(options => new MongoDbContext(database));
 
 var app = builder.Build();

@@ -11,8 +11,7 @@ public static class MongoDbInitializer
         using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
         {
             var dbContext = serviceScope.ServiceProvider.GetService<MongoDbContext>();
-            var clientFactory = serviceScope.ServiceProvider.GetService<IClientFactory>();
-            var client = clientFactory.GetApiClient(ClientType.Tags);
+            var client = serviceScope.ServiceProvider.GetService<ITagsClient>();
 
             if(dbContext == null || dbContext.Tags == null)
                 throw new InvalidDataException("MongoDbContext service is missing");

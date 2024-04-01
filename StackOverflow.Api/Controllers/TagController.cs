@@ -9,12 +9,12 @@ namespace StackOverflow.Controllers;
 public class TagController : ControllerBase
 {
     private readonly ITagService _tagService;
-    private readonly IClientFactory _clientFactory;
+    private readonly ITagsClient _tagsClient;
 
-    public TagController(ITagService tagService, IClientFactory clientFactory)
+    public TagController(ITagService tagService, ITagsClient tagsClient)
     {
         _tagService = tagService;
-        _clientFactory = clientFactory;
+        _tagsClient = tagsClient;
     }
 
     [HttpGet("{id}")]
