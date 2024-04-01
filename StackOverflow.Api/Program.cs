@@ -1,7 +1,13 @@
+using MongoDB.Driver;
+using StackOverflow.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
+var client = new MongoClient("mongodb://localhost:27017");
+var database = client.GetDatabase("StackOverflow");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<MongoDbContext>(options => new MongoDbContext(database));
 
 var app = builder.Build();
 
