@@ -1,5 +1,6 @@
 using MongoDB.Driver;
 using StackOverflow.Infrastructure;
+using StackOverflow.Infrastructure.Clients;
 
 var builder = WebApplication.CreateBuilder(args);
 var client = new MongoClient("mongodb://localhost:27017");
@@ -7,6 +8,7 @@ var database = client.GetDatabase("StackOverflow");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<IClientFactory, ClientFactory>();
 builder.Services.AddSingleton<MongoDbContext>(options => new MongoDbContext(database));
 
 var app = builder.Build();
@@ -29,5 +31,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+MongoDbInitializer.Seed(app).Wait();
 
 app.Run();
