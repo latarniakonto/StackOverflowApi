@@ -8,7 +8,7 @@ namespace StackOverflow.Infrastructure;
 
 public static class MongoDbInitializer
 {
-    public static async Task Seed(IApplicationBuilder applicationBuilder)
+    public static async Task SeedAsync(IApplicationBuilder applicationBuilder)
     {
         using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
         {

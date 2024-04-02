@@ -40,6 +40,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-MongoDbInitializer.Seed(app).Wait();
+MongoDbInitializer.SeedAsync(app).Wait();
 
 app.Run();
