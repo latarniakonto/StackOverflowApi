@@ -1,5 +1,9 @@
+using Microsoft.AspNetCore.Identity;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using StackOverflow.Infrastructure;
+using StackOverflow.Infrastructure.Authentication;
+using StackOverflow.Infrastructure.Authorization;
 using StackOverflow.Infrastructure.Clients;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +16,11 @@ builder.Services.AddSingleton<ITagsClient, TagsClient>();
 builder.Services.AddSingleton<MongoDbContext>(options => new MongoDbContext(database));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddIdentity<TagUser, TagRole>().AddMongoDbStores<TagUser, TagRole, ObjectId>
+(
+    "mongodb://localhost:27017",
+    "StackOverflow"
+).AddDefaultTokenProviders();
 
 var app = builder.Build();
 
@@ -41,5 +50,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 MongoDbInitializer.SeedAsync(app).Wait();
+MongoDbInitializer.SeedUsersAndRolesAsync(app).Wait();
 
 app.Run();
