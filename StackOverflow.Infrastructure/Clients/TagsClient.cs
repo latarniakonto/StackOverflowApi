@@ -10,12 +10,12 @@ namespace StackOverflow.Infrastructure.Clients;
 public class TagsClient : ITagsClient, IDisposable
 {
     private readonly HttpClient _httpClient;
-    private readonly TagsResponse _data;
+    private readonly StackOverflowResponse _response;
 
-    private class TagsResponse
+    private class StackOverflowResponse
     {
         [BsonElement("items")]
-        public List<Tag> Items { get; set; } = new List<Tag>();
+        public List<ResponseTag> Items { get; set; } = new List<ResponseTag>();
 
         [BsonElement("has_more")]
         public bool HasMore { get; set; } = false;
@@ -27,24 +27,24 @@ public class TagsClient : ITagsClient, IDisposable
     public TagsClient(HttpClient httpClient)
     {
         _httpClient = httpClient;
-        _data = new TagsResponse();
+        _response = new StackOverflowResponse();
     }
 
     public TagsClient()
     {
         _httpClient= new HttpClient { BaseAddress = new Uri("https://api.stackexchange.com/")};
-        _data = new TagsResponse();
+        _response = new StackOverflowResponse();
     }
 
-    public async Task<List<Tag>> GetDataAsync()
+    public async Task<List<ResponseTag>> GetDataAsync()
     {
         int page = 1;
-        while (_data.Items.Count < 1000)
+        while (_response.Items.Count < 1000)
         {
             await FetchDataFromApi(page++);
         }
 
-        return _data.Items;
+        return _response.Items;
     }
 
     private async Task FetchDataFromApi(int page)
@@ -62,13 +62,13 @@ public class TagsClient : ITagsClient, IDisposable
         {
             string json = await reader.ReadToEndAsync();
             BsonDocument document = BsonDocument.Parse(json);
-            TagsResponse tags = BsonSerializer.Deserialize<TagsResponse>(document);
+            StackOverflowResponse tags = BsonSerializer.Deserialize<StackOverflowResponse>(document);
 
             foreach (var tag in tags.Items)
             {
-                if (_data.Items.Any(t => t.Name == tag.Name)) continue;
+                if (_response.Items.Any(t => t.Name == tag.Name)) continue;
 
-                _data.Items.Add(tag);
+                _response.Items.Add(tag);
             }
         }
     }

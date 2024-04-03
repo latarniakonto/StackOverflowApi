@@ -26,10 +26,10 @@ public static class MongoDbInitializer
 
             ITagsClient client = serviceScope.ServiceProvider.GetService<ITagsClient>();
 
-            List<Services.Tag> tags = await client.GetDataAsync();
+            List<Services.ResponseTag> tags = await client.GetDataAsync();
             int totalTagsCount = tags.Sum(t => t.Count);
             
-            foreach(Services.Tag tag in tags)
+            foreach(Services.ResponseTag tag in tags)
             {
                 Services.Tag dbTag = new Services.Tag()
                 {
@@ -37,7 +37,6 @@ public static class MongoDbInitializer
                     Name = tag.Name,
                     Count = tag.Count,
                     Weight = (float)tag.Count / totalTagsCount,
-                    AdditionalElements = tag.AdditionalElements
                 };
                 await dbContext.Tags.InsertOneAsync(dbTag);
             }

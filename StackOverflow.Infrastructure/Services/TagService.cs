@@ -22,15 +22,15 @@ public class TagService : ITagService
         if (_tagsClient == null)
             throw new InvalidDataException("StackOverflow client is missing");
 
-        IEnumerable<Tag> tags = await _tagsClient.GetDataAsync();
+        List<ResponseTag> tags = await _tagsClient.GetDataAsync();
         int totalTagsCount = tags.Sum(t => t.Count);
             
-        foreach(Tag tag in tags)
+        foreach(ResponseTag tag in tags)
         {
             FilterDefinition<Tag> filter = Builders<Tag>.Filter.Eq(t => t.Name, tag.Name);
             UpdateDefinition<Tag> update = Builders<Tag>.Update
                 .Set(t => t.Count, tag.Count)
-                .Set(t => t.Weight, tag.Weight / totalTagsCount);
+                .Set(t => t.Weight, tag.Count / totalTagsCount);
             FindOneAndUpdateOptions<Tag, Tag> options = new FindOneAndUpdateOptions<Tag, Tag>
             {
                 ReturnDocument = ReturnDocument.After
@@ -45,11 +45,10 @@ public class TagService : ITagService
                 Name = tag.Name,
                 Count = tag.Count,
                 Weight = (float)tag.Count / totalTagsCount,
-                AdditionalElements = tag.AdditionalElements
             };
             await _dbContext.Tags.InsertOneAsync(dbTag);
         }
-        return tags;
+        return await _dbContext.Tags.Find(Builders<Tag>.Filter.Empty).ToListAsync();
     }
 
     [HttpGet]

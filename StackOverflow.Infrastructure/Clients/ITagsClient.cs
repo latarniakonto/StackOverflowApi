@@ -4,5 +4,5 @@ namespace StackOverflow.Infrastructure.Clients;
 
 public interface ITagsClient
 {
-    Task<List<Tag>> GetDataAsync();
+    Task<List<ResponseTag>> GetDataAsync();
 }
