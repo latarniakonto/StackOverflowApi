@@ -18,15 +18,11 @@ public class TagController : Controller
     }
 
     [HttpGet]
-    public async Task<ActionResult> GetTags(
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10,
-        [FromQuery] string nameSortOrder = "asc",
-        [FromQuery] string weightSortOrder = "asc")
+    public async Task<ActionResult> GetTags()
     {
         try
         {
-            var tags = await _tagService.GetTagsAsync(page, pageSize, nameSortOrder, weightSortOrder);
+            var tags = await _tagService.GetTagsAsync();
             return Ok(tags);
         }
         catch (Exception ex)

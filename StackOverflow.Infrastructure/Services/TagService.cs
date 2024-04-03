@@ -52,31 +52,11 @@ public class TagService : ITagService
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Tag>> GetTagsAsync(int page, int pageSize, string nameSortOrder, string weightSortOrder)
+    public async Task<IEnumerable<Tag>> GetTagsAsync()
     {
         if (_dbContext == null || _dbContext.Tags == null)
             throw new InvalidDataException("Database context is missing");
 
-        SortDefinition<Tag> nameSortDefinition = nameSortOrder.ToLower() switch
-        {
-            "asc" => Builders<Tag>.Sort.Ascending(t => t.Name),
-            "desc" => Builders<Tag>.Sort.Descending(t => t.Name),
-            _ => Builders<Tag>.Sort.Ascending(t => t.Name)
-        };
-
-        SortDefinition<Tag> weightSortDefinition = weightSortOrder.ToLower() switch
-        {
-            "asc" => Builders<Tag>.Sort.Ascending(t => t.Weight),
-            "desc" => Builders<Tag>.Sort.Descending(t => t.Weight),
-            _ => Builders<Tag>.Sort.Ascending(t => t.Weight)
-        };
-
-        return await _dbContext.Tags
-            .Find(Builders<Tag>.Filter.Empty)
-            .Sort(nameSortDefinition)
-            .Sort(weightSortDefinition)
-            .Skip((page - 1) * pageSize)
-            .Limit(pageSize)
-            .ToListAsync();
+        return await _dbContext.Tags.Find(Builders<Tag>.Filter.Empty).ToListAsync();
     }
 }
