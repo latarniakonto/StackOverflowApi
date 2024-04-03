@@ -26,7 +26,7 @@ public class TagController : Controller
         try
         {
             var tags = await _tagService.GetTagsAsync();
-            return Ok(tags);
+            return View("Index", tags);
         }
         catch (Exception ex)
         {
@@ -42,7 +42,7 @@ public class TagController : Controller
         try
         {
             var tags = await _tagService.GetOrUpdateAllTagsAsync();
-            return Ok(tags);
+            return View("Index", tags);
         }
         catch (Exception ex)
         {

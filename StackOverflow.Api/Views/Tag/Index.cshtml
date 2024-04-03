@@ -1,0 +1,86 @@
+@model IEnumerable<StackOverflow.Infrastructure.Services.Tag>
+
+@{
+    ViewData["Title"] = "List of Tags";
+}
+
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <table id="tagsTable" class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Count</th>
+                    <th>Weight</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Count</td>
+                        <td>@($"{MathF.Round(item.Weight * 100, 3):0.###}%")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <script>
+        $(document).ready(function() {
+            var table = $('#tagsTable').DataTable({
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "searching": false,
+                "columnDefs": [
+                    { "targets": [0, 1, 2], "orderable": false }
+                ],
+            });
+            
+            function changeOrder(clickedIndex) {
+                var currentSort = table.order();
+                var newOrder = [];
+                var clickedOrder = 'asc';
+                var addAtEnd = true;
+                    
+                for (var col in currentSort) {
+                    if (currentSort[col][0] === clickedIndex) {
+                        addAtEnd = false;
+                        clickedOrder = currentSort[col][1];
+                        if (clickedOrder === 'asc') {
+                        clickedOrder = 'desc';
+                        newOrder.push([clickedIndex, clickedOrder]);
+                        }     
+                    }
+                    else {
+                        newOrder.push(currentSort[col]);
+                    }
+                }
+                
+                if (addAtEnd) {
+                    newOrder.push([clickedIndex, clickedOrder]);
+                }
+                table.order(newOrder).draw();
+            }
+            
+            table.columns().every(function() {
+                var index = this.index();
+                if (index !== 1) {
+                    var header = $('#tagsTable thead th:eq('+index+')');
+                    header.addClass('sorting');
+                    header.removeClass('sorting_disabled');
+                    
+                    header.click(function() {
+                    changeOrder(index);
+                    });
+                }
+            });
+        });
+    </script>
+}
