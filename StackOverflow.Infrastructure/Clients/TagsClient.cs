@@ -49,7 +49,7 @@ public class TagsClient : ITagsClient, IDisposable
 
     private async Task FetchDataFromApi(int page)
     {
-        HttpResponseMessage response = await _httpClient.GetAsync($"/2.3/tags?order=desc&sort=popular&site=stackoverflow&pagesize=100&page{page}");
+        HttpResponseMessage response = await _httpClient.GetAsync($"/2.3/tags?order=desc&sort=popular&site=stackoverflow&pagesize=100&page={page}");
         if (response.IsSuccessStatusCode)
         {
             if (response.Content.Headers.ContentEncoding.Contains("gzip"))
