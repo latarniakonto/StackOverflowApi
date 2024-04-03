@@ -53,11 +53,7 @@ public class TagService : ITagService
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Tag>> GetTagsAsync(
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10,
-        [FromQuery] string nameSortOrder = "asc",
-        [FromQuery] string weightSortOrder = "asc")
+    public async Task<IEnumerable<Tag>> GetTagsAsync(int page, int pageSize, string nameSortOrder, string weightSortOrder)
     {
         if (_dbContext == null || _dbContext.Tags == null)
             throw new InvalidDataException("Database context is missing");

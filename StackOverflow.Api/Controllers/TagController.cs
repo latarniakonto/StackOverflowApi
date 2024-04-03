@@ -19,10 +19,10 @@ public class TagController : Controller
 
     [HttpGet]
     public async Task<ActionResult> GetTags(
-        int page = 1,
-        int pageSize = 10,
-        string nameSortOrder = "asc",
-        string weightSortOrder = "asc")
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string nameSortOrder = "asc",
+        [FromQuery] string weightSortOrder = "asc")
     {
         try
         {
