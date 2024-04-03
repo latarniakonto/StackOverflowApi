@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using StackOverflow.Api.Swashbuckle;
 using StackOverflow.Infrastructure;
 using StackOverflow.Infrastructure.Authentication;
 using StackOverflow.Infrastructure.Authorization;
@@ -36,6 +37,7 @@ if (!app.Environment.IsDevelopment())
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwaggerAccessMiddleware();
     app.UseSwagger();
     app.UseSwaggerUI();
 }

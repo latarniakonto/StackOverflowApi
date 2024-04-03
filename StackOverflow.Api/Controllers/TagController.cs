@@ -1,8 +1,9 @@
-using StackOverflow.Infrastructure.Clients;
 using StackOverflow.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using StackOverflow.Api.Models;
 using System.Diagnostics;
+using StackOverflow.Infrastructure.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace StackOverflow.Controllers;
 
@@ -18,6 +19,8 @@ public class TagController : Controller
     }
 
     [HttpGet]
+    [Authorize]
+    [Authorize(Roles = UserRoles.User + "," + UserRoles.Admin)]
     public async Task<ActionResult> GetTags()
     {
         try
@@ -32,6 +35,8 @@ public class TagController : Controller
     }
 
     [HttpPost("update")]
+    [Authorize]
+    [Authorize(Roles = UserRoles.User + "," + UserRoles.Admin)]
     public async Task<ActionResult> UpdateTags()
     {
         try
