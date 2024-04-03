@@ -16,17 +16,4 @@ public class TagController : ControllerBase
         _tagService = tagService;
         _tagsClient = tagsClient;
     }
-
-    [HttpGet("{id}")]
-    public IActionResult Get(int id)
-    {
-        var tag = _tagService.GetTagAsync(id).Result;
-
-        if (tag == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(tag);
-    }
 }
