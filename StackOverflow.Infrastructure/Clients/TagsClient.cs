@@ -50,26 +50,26 @@ public class TagsClient : ITagsClient, IDisposable
     private async Task FetchDataFromApi(int page)
     {
         HttpResponseMessage response = await _httpClient.GetAsync($"/2.3/tags?order=desc&sort=popular&site=stackoverflow&pagesize=100&page={page}");
-        if (response.IsSuccessStatusCode)
-        {
-            if (response.Content.Headers.ContentEncoding.Contains("gzip"))
-            {
-                using (Stream compressedStream = await response.Content.ReadAsStreamAsync())
-                using (GZipStream gzipStream = new GZipStream(compressedStream, CompressionMode.Decompress))
-                using (StreamReader reader = new StreamReader(gzipStream, Encoding.UTF8))
-                {
-                    string json = await reader.ReadToEndAsync();
-                    BsonDocument document = BsonDocument.Parse(json);
-                    TagsResponse tags = new TagsResponse();
-                    tags = BsonSerializer.Deserialize<TagsResponse>(document);
-
-                    _data.Items.AddRange(tags.Items);
-                }
-            }
-        }
-        else
-        {
+        if (!response.IsSuccessStatusCode)
             throw new InvalidOperationException("Data fetch exception");
+
+        if (!response.Content.Headers.ContentEncoding.Contains("gzip"))
+            throw new InvalidDataException("Unsupported content encoding");
+
+        using (Stream compressedStream = await response.Content.ReadAsStreamAsync())
+        using (GZipStream gzipStream = new GZipStream(compressedStream, CompressionMode.Decompress))
+        using (StreamReader reader = new StreamReader(gzipStream, Encoding.UTF8))
+        {
+            string json = await reader.ReadToEndAsync();
+            BsonDocument document = BsonDocument.Parse(json);
+            TagsResponse tags = BsonSerializer.Deserialize<TagsResponse>(document);
+
+            foreach (var tag in tags.Items)
+            {
+                if (_data.Items.Any(t => t.Name == tag.Name)) continue;
+
+                _data.Items.Add(tag);
+            }
         }
     }
 
