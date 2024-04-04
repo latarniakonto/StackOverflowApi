@@ -7,22 +7,22 @@ using StackOverflow.Infrastructure.Services;
 
 namespace StackOverflow.Infrastructure.Clients;
 
+public class StackOverflowResponse
+{
+    [BsonElement("items")]
+    public List<ResponseTag> Items { get; set; } = new List<ResponseTag>();
+
+    [BsonElement("has_more")]
+    public bool HasMore { get; set; } = false;
+
+    [BsonExtraElements]
+    public BsonDocument AdditionalElements { get; set; }
+}
+
 public class TagsClient : ITagsClient, IDisposable
 {
     private readonly HttpClient _httpClient;
     private readonly StackOverflowResponse _response;
-
-    private class StackOverflowResponse
-    {
-        [BsonElement("items")]
-        public List<ResponseTag> Items { get; set; } = new List<ResponseTag>();
-
-        [BsonElement("has_more")]
-        public bool HasMore { get; set; } = false;
-
-        [BsonExtraElements]
-        public BsonDocument AdditionalElements { get; set; }
-    }
 
     public TagsClient(HttpClient httpClient)
     {
