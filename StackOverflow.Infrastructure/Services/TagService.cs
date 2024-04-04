@@ -30,7 +30,7 @@ public class TagService : ITagService
             FilterDefinition<Tag> filter = Builders<Tag>.Filter.Eq(t => t.Name, tag.Name);
             UpdateDefinition<Tag> update = Builders<Tag>.Update
                 .Set(t => t.Count, tag.Count)
-                .Set(t => t.Weight, tag.Count / totalTagsCount);
+                .Set(t => t.Weight, (float)tag.Count / totalTagsCount);
             FindOneAndUpdateOptions<Tag, Tag> options = new FindOneAndUpdateOptions<Tag, Tag>
             {
                 ReturnDocument = ReturnDocument.After
