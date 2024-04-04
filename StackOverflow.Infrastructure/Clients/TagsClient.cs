@@ -39,15 +39,16 @@ public class TagsClient : ITagsClient, IDisposable
     public async Task<List<ResponseTag>> GetDataAsync()
     {
         int page = 1;
-        while (_response.Items.Count < 1000)
+        bool hasMore = true;
+        while (hasMore && _response.Items.Count < 1000)
         {
-            await FetchDataFromApi(page++);
+            hasMore = await FetchDataFromApi(page++);
         }
 
         return _response.Items;
     }
 
-    private async Task FetchDataFromApi(int page)
+    private async Task<bool> FetchDataFromApi(int page)
     {
         HttpResponseMessage response = await _httpClient.GetAsync($"/2.3/tags?order=desc&sort=popular&site=stackoverflow&pagesize=100&page={page}");
         if (!response.IsSuccessStatusCode)
@@ -70,6 +71,7 @@ public class TagsClient : ITagsClient, IDisposable
 
                 _response.Items.Add(tag);
             }
+            return tags.HasMore;
         }
     }
 
