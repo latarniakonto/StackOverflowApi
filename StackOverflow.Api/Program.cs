@@ -9,7 +9,7 @@ using StackOverflow.Infrastructure.Clients;
 using StackOverflow.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-var client = new MongoClient("mongodb://localhost:27017");
+var client = new MongoClient("mongodb://mongo:27017");
 var database = client.GetDatabase("StackOverflow");
 
 // Add services to the container.
@@ -21,7 +21,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddIdentity<TagUser, TagRole>().AddMongoDbStores<TagUser, TagRole, ObjectId>
 (
-    "mongodb://localhost:27017",
+    "mongodb://mongo:27017",
     "StackOverflow"
 ).AddDefaultTokenProviders();
 
