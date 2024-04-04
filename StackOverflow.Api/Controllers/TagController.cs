@@ -5,7 +5,7 @@ using System.Diagnostics;
 using StackOverflow.Infrastructure.Authorization;
 using Microsoft.AspNetCore.Authorization;
 
-namespace StackOverflow.Controllers;
+namespace StackOverflow.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
